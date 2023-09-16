@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "./CodeVisalizer.css";
 
 function CodeVisualizer() {
   const [input, setInput] = useState('');
@@ -21,20 +22,26 @@ function CodeVisualizer() {
 
   return (
     <div className="chat-box">
-      <div className="chat-messages">
+      {/* Previous Messages */}
+      <div className="previous-messages">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender}`}>
             {message.text}
           </div>
         ))}
       </div>
+
+      {/* Text Input and Submit Button */}
       <form onSubmit={handleSubmit} className="message-input-form">
+        {/* Text Input */}
         <input
           type="text"
           value={input}
           onChange={handleInputChange}
           placeholder="Type your message..."
         />
+        
+        {/* Submit Button */}
         <button type="submit">Send</button>
       </form>
     </div>
