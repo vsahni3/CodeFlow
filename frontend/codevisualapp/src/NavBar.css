@@ -58,13 +58,19 @@ gap: 1rem;
 }
 
 .nav a {
-color: inherit;
-text-decoration: none;
-height: 100%;
-display: flex;
-align-items: center;
-padding: .25rem;
-}
+    color: inherit;
+    text-decoration: none;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: .25rem;
+    transition: color 0.3s, background-color 0.3s; /* Add transition for smooth hover effect */
+  }
+  
+  .nav a:hover {
+    color: #3EE0B9; /* Change the color on hover */
+    background-color: rgba(0, 0, 0, 0.1); /* Add a subtle background color on hover */
+  }
 
 .navbar_logout {
 box-sizing: border-box;

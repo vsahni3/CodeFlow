@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import "./CodeVisalizer.css";
+import './CodeVisualizer.css';
 
 function CodeVisualizer() {
   const [input, setInput] = useState('');
@@ -13,37 +13,46 @@ function CodeVisualizer() {
     e.preventDefault();
     if (input.trim() === '') return;
 
-    // Update messages with new input
-    setMessages([...messages, { text: input, sender: 'user' }]);
+    // Add the new message to the top of the messages array
+    setMessages([{ text: input, sender: 'user' }, ...messages]);
     setInput('');
 
     // Implement chatbot response logic here if needed
   };
 
   return (
-    <div className="chat-box">
-      {/* Previous Messages */}
-      <div className="previous-messages">
-        {messages.map((message, index) => (
-          <div key={index} className={`message ${message.sender}`}>
-            {message.text}
-          </div>
-        ))}
+    <div className="chat-visual-container">
+      {/* Visual Screen */}
+      <div className="visual-screen">
+        {/* Add your visual content here */}
+        {/* For example, you can add an image or any visual elements */}
       </div>
 
-      {/* Text Input and Submit Button */}
-      <form onSubmit={handleSubmit} className="message-input-form">
-        {/* Text Input */}
-        <input
-          type="text"
-          value={input}
-          onChange={handleInputChange}
-          placeholder="Type your message..."
-        />
-        
-        {/* Submit Button */}
-        <button type="submit">Send</button>
-      </form>
+      {/* Chat Box */}
+      <div className="chat-box">
+        {/* Previous Messages */}
+        <div className="previous-messages">
+          {messages.map((message, index) => (
+            <div key={index} className={`message ${message.sender}`}>
+              {message.text}
+            </div>
+          ))}
+        </div>
+
+        {/* Text Input and Submit Button */}
+        <form onSubmit={handleSubmit} className="message-input-form">
+          {/* Text Input */}
+          <input
+            type="text"
+            value={input}
+            onChange={handleInputChange}
+            placeholder="Type your message..."
+          />
+
+          {/* Submit Button */}
+          <button type="submit">Send</button>
+        </form>
+      </div>
     </div>
   );
 }

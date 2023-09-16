@@ -1,5 +1,5 @@
-import { Link, useMatch, useResolvedPath } from "react-router-dom"
-import './NavBar.css'
+import { Link, useMatch, useResolvedPath } from "react-router-dom";
+import './NavBar.css';
 
 export default function NavBar() {
     return (
@@ -12,12 +12,12 @@ export default function NavBar() {
                 <CustomLink className='navbar_prompt' to="/visual">Visualizer</CustomLink>
             </ul>
         </nav>
-    )
+    );
 }
 
 function CustomLink({ to, children, ...props }) {
-    const resolvedPath = useResolvedPath(to)
-    const isActive = useMatch({ path: resolvedPath.pathname, end: true })
+    const resolvedPath = useResolvedPath(to);
+    const isActive = useMatch({ path: resolvedPath.pathname, end: true });
 
     return (
         <li className={isActive ? "active" : ""}>
@@ -25,5 +25,5 @@ function CustomLink({ to, children, ...props }) {
                 {children}
             </Link>
         </li>
-    )
+    );
 }

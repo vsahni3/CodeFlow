@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import "./DragDropFiles.css";
 
 const DragDropFiles = () => {
   const [files, setFiles] = useState(null);
