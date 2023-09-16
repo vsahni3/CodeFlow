@@ -1,8 +1,11 @@
 import cohere
-from cohere.responses.classify import Example
 import numpy as np
 import os
- 
+from sklearn.metrics.pairwise import cosine_similarity
+import autofaiss
+
+
+
 api_key = os.environ["OPENAI_API_KEY"]
 co = cohere.Client(api_key)
 
@@ -30,36 +33,16 @@ def summarize_code(file_code: str):
 
 
 def find_file(summaries, question):
-    # list_summaries = list(summaries.keys())
-    # str_summaries = f'Based on the below summaries, give me the numbers of the top 2 results which can help answer the question {question}\n\n'
+    list_summary = list(summaries.keys())
 
-    # for i in range(len(list_summaries)):
-    #     str_summaries += f'{i + 1}. {list_summaries[i]}\n\n'
+    combined_values = [question] + list_summary
+    embeddings = np.array(co.embed(combined_values).embeddings)
 
-    # response = co.generate(
-    # model='command-xlarge-nightly',
-    # prompt=str_summaries,
-    # max_tokens=100,
-    # temperature=0.8,
-    # stop_sequences=["--"],
-    # return_likelihoods='NONE',
-    # truncate='START')
-    # res = response.generations[0].text.strip('-').strip('\n').strip(' ')
-    # nums = []
-    # for i in res:
-    #     if i.isdigit():
-    #         nums.append(int(i))
-    max_similarity = 0
-    max_summary = ''
-    for summary in summaries:
+    index, stats = autofaiss.build_index(embeddings)
+    dist, idx = index.search(np.array([embeddings[0]]), k=3)
 
-        embeds, embeds_question = co.embed([summary, question]).embeddings
-        similarity = np.dot(embeds, embeds_question) / (np.linalg.norm(embeds) * np.linalg.norm(embeds_question))
-        if similarity > max_similarity:
-            max_similarity = similarity
-            max_summary = summary
-    print(max_similarity)
-    return summaries[max_summary]
+    return [summaries[combined_values[i]] for i in idx[0][1:]]
+
 
 
 def reply(file, question):
@@ -141,6 +124,6 @@ code = {
     summarize_code(main1_code): 'src/folder1/main1.py',
     summarize_code(main2_code): 'src/folder2/main2.py'
 }
-print(find_file(code, 'How can I make a histogram?'))
-print(summarize_code(main2_code))
+print(find_file(code, 'Help me with data cleaning'))
+#print(summarize_code(main2_code))
 
