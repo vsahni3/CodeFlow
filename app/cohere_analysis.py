@@ -3,6 +3,7 @@ import numpy as np
 import os
 from sklearn.metrics.pairwise import cosine_similarity
 import autofaiss
+from db_funcs import *
 
 
 
@@ -32,7 +33,7 @@ def summarize_code(file_code: str):
     return response.generations[0].text.strip('-').strip('\n').strip(' ')
 
 
-def find_file(summaries, question):
+def find_files(summaries, question):
     list_summary = list(summaries.keys())
 
     combined_values = [question] + list_summary
@@ -45,13 +46,14 @@ def find_file(summaries, question):
 
 
 
-def reply(file, question):
+def reply(files, question):
     sample_file_qs = ['what file', 'which file', 'file path', 'what folder', 'which folder']
     for file_q in sample_file_qs:
         if file_q in question.lower():
-            return file
-    prompt = f'Use the below code to answer the question {question}\n\n'
-    file_code = 'get_file_code(file)'
+            return files
+    file_code = f'File1:\n {get_file(files[0])}\n\nFile2:\n {get_file(files[1])}'
+    prompt = f'Use the below code from 2 files to answer the question {question}\n\n{file_code}'
+    
     response = co.generate(
         model='command-xlarge-nightly',
         prompt=prompt,
@@ -120,10 +122,10 @@ def top_10_met_type_histograms():
 
 top_10_met_type_histograms()
 '''
-code = {
-    summarize_code(main1_code): 'src/folder1/main1.py',
-    summarize_code(main2_code): 'src/folder2/main2.py'
-}
-print(find_file(code, 'Help me with data cleaning'))
+# code = {
+#     summarize_code(main1_code): 'src/folder1/main1.py',
+#     summarize_code(main2_code): 'src/folder2/main2.py'
+# }
+
 #print(summarize_code(main2_code))
 
