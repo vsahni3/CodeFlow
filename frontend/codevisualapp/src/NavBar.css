@@ -66,17 +66,7 @@ align-items: center;
 padding: .25rem;
 }
 
-.nav li.active {
-/* background-color: #555; */
-}
-
-.nav li:hover {
-/* background-color: #777; */
-}
-
 .navbar_logout {
-/* Rectangle 15 */
-
 box-sizing: border-box;
 position: relative;
 background: #3EE0B9;

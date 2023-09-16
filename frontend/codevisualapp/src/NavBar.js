@@ -7,10 +7,6 @@ export default function NavBar() {
             <Link to="/" >
                 <p className="navbar_title">Put Title Here</p>
             </Link>
-
-            {/* <Link to="/" className="navbar_title">
-                TechTutor
-            </Link> */}
             <ul>
                 <CustomLink className='navbar_chat' to="/dragdrop">Upload</CustomLink>
                 <CustomLink className='navbar_prompt' to="/visual">Visualizer</CustomLink>
