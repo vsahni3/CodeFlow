@@ -67,8 +67,13 @@ def upload_file_mongo(target, folder):
                 data.append(file_data)
     # upload data
     if len(data) > 0:
+        delete_all(collection_name)
         data.append({"filename": "structure", "data": structure})
         collection_name.insert_many(data)
+
+
+def delete_all(collection_name):
+    collection_name.delete_many({})
 
 
 def get_all(collection_name):  # collection_name is the "folder"
