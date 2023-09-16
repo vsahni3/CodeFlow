@@ -1,27 +1,28 @@
-import json
-import logging
+import glob
 import os
-from argparse import ArgumentParser
+from pathlib import Path
 
 import pandas as pd
 from dotenv import load_dotenv
 from flask import Flask, flash, redirect, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
+from pymongo import MongoClient
+from pyunpack import Archive
 from sqlalchemy import asc, func
 from werkzeug.utils import secure_filename
 
 load_dotenv()
-# DATABASE_URI = os.environ.get("DATABASE_URI")
 UPLOAD_FOLDER = "./uploads"
-ALLOWED_EXTENSIONS = set(["py", "zip", "txt"])
+ALLOWED_EXTENSIONS = set(["7z"])
+
+
+def get_database():
+    client = MongoClient(os.environ.get("CONNECTION_STRING"))
+    return client["uploads"]
+
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-# app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
-# app.config["SQLALCHEMY_ECHO"] = False
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-# db = SQLAlchemy(app)
-# app.app_context().push()
 
 
 @app.route("/", methods=["GET"])
@@ -31,16 +32,41 @@ def index():
 
 @app.route("/upload", methods=["POST"])
 def upload():
-    target = os.path.join(UPLOAD_FOLDER, "sample_upload_folder")
+    # Upload 7z file
+    target = UPLOAD_FOLDER
     if not os.path.isdir(target):
         os.mkdir(target)
-    file = request.files["sample.txt"]
+    file = request.files["sample.7z"]  # Change name?
     filename = secure_filename(file.filename)
     destination = "/".join([target, filename])
     file.save(destination)
+    # Extract 7z file
+    Archive(destination).extractall(target)
+    print(target, filename.split(".")[0])
+    upload_file_mongo(target, filename.split(".")[0])
     return "Success"
 
 
-if __name__ == '__main__':
-    # Threaded option to enable multiple instances for multiple user access support
-    app.run(threaded=True, port=5000)
+def upload_file_mongo(target, folder):
+    # Get db and create collection
+    dbname = get_database()
+    collection_name = dbname[folder]
+    data = []
+    # Iterate through the files
+    path = Path(os.path.dirname(os.path.realpath(__file__))) / target / folder
+    for filename in glob.iglob(f"{path}/**", recursive=True):
+        if os.path.isfile(filename):
+            mongo_filepath = os.path.relpath(filename, path)
+            with open(filename, "r") as file:
+                file_content = file.read()
+                print(file_content)
+                file_data = {"filename": mongo_filepath, "data": file_content}
+                data.append(file_data)
+    # upload data
+    if len(data) > 0:
+        collection_name.insert_many(data)
+
+
+if __name__ == "__main__":
+    dbname = get_database()
+    app.run(threaded=True, debug=True, host="0.0.0.0", port=5000)
