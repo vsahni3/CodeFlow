@@ -43,6 +43,7 @@ def upload():
     # Extract 7z file
     Archive(destination).extractall(target)
     print(target, filename.split(".")[0])
+    # Upload to mongo
     upload_file_mongo(target, filename.split(".")[0])
     return "Success"
 
@@ -52,6 +53,7 @@ def upload_file_mongo(target, folder):
     dbname = get_database()
     collection_name = dbname[folder]
     data = []
+    structure = ""
     # Iterate through the files
     path = Path(os.path.dirname(os.path.realpath(__file__))) / target / folder
     for filename in glob.iglob(f"{path}/**", recursive=True):
@@ -61,10 +63,26 @@ def upload_file_mongo(target, folder):
                 file_content = file.read()
                 print(file_content)
                 file_data = {"filename": mongo_filepath, "data": file_content}
+                structure += f"{mongo_filepath}\n"
                 data.append(file_data)
     # upload data
     if len(data) > 0:
+        data.append({"filename": "structure", "data": structure})
         collection_name.insert_many(data)
+
+
+def get_all(collection_name):  # collection_name is the "folder"
+    dbname = get_database()
+    collection = dbname[collection_name]
+    file_details = collection.find()
+    print(list(file_details))
+
+
+def get_file(collection_name, filename):  # collection_name is the "folder"
+    dbname = get_database()
+    collection = dbname[collection_name]
+    file_details = collection.find({"filename": filename})
+    print(list(file_details))
 
 
 if __name__ == "__main__":
