@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@500&display=swap');
+
+.navbar {
+position: relative;
+top: 0px;
+}
+
+* {
+box-sizing: border-box;
+}
+
+body {
+margin: 0;
+}
+
+.container {
+margin: 1rem;
+text-align: center;
+}
+
+.nav {
+background-color: white;
+color: black;
+display: flex;
+justify-content: space-between;
+align-items: stretch;
+gap: 2rem;
+padding: 0 1rem;
+width: 100%;
+height: 70px;
+filter: drop-shadow(0 0.2rem 0.25rem rgba(0, 0, 0, 0.2));
+/* top: 0px; */
+margin-top: 0px;
+}
+
+
+.navbar_title {
+font-size: 2rem;
+font-family: 'Russo One', sans-serif;
+margin-top: 33px;
+color: #3EE0B9;
+}
+
+.navbar_logo {
+height: 50%;
+width: 100%;
+margin-right: 10px;
+}
+
+.nav ul {
+padding: 0;
+margin: 0;
+list-style: none;
+display: flex;
+gap: 1rem;
+}
+
+.nav a {
+color: inherit;
+text-decoration: none;
+height: 100%;
+display: flex;
+align-items: center;
+padding: .25rem;
+}
+
+.nav li.active {
+/* background-color: #555; */
+}
+
+.nav li:hover {
+/* background-color: #777; */
+}
+
+.navbar_logout {
+/* Rectangle 15 */
+
+box-sizing: border-box;
+position: relative;
+background: #3EE0B9;
+/* border: 1px solid #000000; */
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+border-radius: 21.5px;
+right: 30px;
+/* height: 50px;; */
+margin-top: 17px;
+margin-bottom: 17px;
+color: white;
+width: 80px;
+border: 0px;
+font-family: 'Rubik', sans-serif;
+}
+
+.navbar_prompt{
+position: relative;
+right: 25px;
+font-family: 'Rubik', sans-serif;
+/* font-size: 15px; */
+}
+
+.navbar_chat{
+position: relative;
+right: 25px;
+font-family: 'Rubik', sans-serif;
+/* font-size: 15px; */
+}
