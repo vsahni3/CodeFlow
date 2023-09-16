@@ -13,7 +13,7 @@ const DragDropFiles = () => {
     setFiles(event.dataTransfer.files)
   };
   
-  // send files to the server // learn from my other video
+  // send files to the server
   const handleUpload = () => {
     const formData = new FormData();
     formData.append("Files", files);
