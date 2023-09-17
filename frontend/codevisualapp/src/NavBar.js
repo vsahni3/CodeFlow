@@ -5,7 +5,7 @@ export default function NavBar() {
     return (
         <nav className="nav">
             <Link to="/" >
-                <p className="navbar_title">DependencyBuddy</p>
+                <p className="navbar_title">CodeFlow</p>
             </Link>
             <ul>
                 <CustomLink className='navbar_chat' to="/dragdrop">Upload</CustomLink>
