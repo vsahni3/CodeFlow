@@ -5,7 +5,7 @@ export default function NavBar() {
 
     function clickFunc () {
         
-        window.location.href = 'https://www.google.ca/';
+        window.location.href = 'https://aparahuja.github.io';
     }
     return (
         <nav className="nav">
@@ -16,8 +16,8 @@ export default function NavBar() {
                 <CustomLink className='navbar_chat' to="/dragdrop">Upload</CustomLink>
 
                 <CustomLink className='navbar_prompt' to="/visual">Chat Bot</CustomLink>
-                <CustomLink className='navbar_visualize' onClick={redirectToWebsite}>Visualize</CustomLink>
-                <a href="C:\\Users\\12254\\Documents\\GitHub\\HackTheNorth\\app\\func_graph.html">Redirect to Html page</a>
+                <CustomLink className='navbar_visualize' onClick={clickFunc}>Visualize</CustomLink>
+               
 
             </ul>
         </nav>

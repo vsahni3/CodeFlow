@@ -14,11 +14,11 @@ function CodeVisualizer() {
     if (input.trim() === '') return;
 
     // Add the user's message to the chat
-    setMessages([{ text: input, sender: 'user' }, ...messages]);
+    setMessages((prevMessages) => [{ text: input, sender: 'user' }, ...prevMessages]);
     setInput('');
 
     // Simulate a chatbot response (you can replace this with your actual chatbot logic)
-    simulateChatbotResponse(input);
+    simulateChatbotResponse('h1');
   };
 
   const simulateChatbotResponse = (userInput) => {
@@ -27,7 +27,7 @@ function CodeVisualizer() {
     const botResponse = `You said: ${userInput}`;
 
     // Add the chatbot's response to the chat
-    setMessages([{ text: botResponse, sender: 'bot' }, ...messages]);
+    setMessages((prevMessages) => [{ text: botResponse, sender: 'bot' }, ...prevMessages]);
   };
 
   return (
