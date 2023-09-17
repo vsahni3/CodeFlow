@@ -11,7 +11,7 @@ const App = () => {
                 <NavBar/>
                 <div className='Content'>
                     <Routes>
-                        {/* <Route path='/' element={<Navigate to='/dragdrop' />} /> */}
+                        <Route path='/' element={<Navigate to='/dragdrop' />} />
                         <Route path='/dragdrop' element={<DragDropFiles />} />
                         <Route path='/visual' element={<CodeVisualizer />} />
                     </Routes>
