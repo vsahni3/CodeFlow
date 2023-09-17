@@ -52,3 +52,10 @@ def get_file(collection_name, filename):  # collection_name is the "folder"
 
 def delete_all(collection_name):
     collection_name.delete_many({})
+
+
+def add_file_summary(collection_name, filename, summary):
+    dbname = get_database()
+    collection = dbname[collection_name]
+    query = {"filename": filename}
+    update_result = collection.update_many(query, {"$set": {"summary": summary}})

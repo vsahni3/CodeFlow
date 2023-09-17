@@ -12,11 +12,12 @@ co = cohere.Client(api_key)
 
 
 
-def summarize_code(file_code: str):
+def summarize_code(files: dict):
     prompt = f'''
-    Summarize the following code briefly.
-    {file_code}
+    Summarize the following Python code in roughly 50 words.\n
     '''
+    for file in files:
+        prompt += f'File: {file}\n\nCode:\n{files[file]}'
     # past_info = load_messages(email)
     # past_prompt = ''
     # for data in past_info:
@@ -47,11 +48,11 @@ def find_files(summaries, question):
 
 
 def reply(files, question):
-    sample_file_qs = ['what file', 'which file', 'file path', 'what folder', 'which folder']
-    for file_q in sample_file_qs:
-        if file_q in question.lower():
-            return files
-    file_code = f'File1:\n {get_file(files[0])}\n\nFile2:\n {get_file(files[1])}'
+    # sample_file_qs = ['what file', 'which file', 'file path', 'what folder', 'which folder']
+    # for file_q in sample_file_qs:
+    #     if file_q in question.lower():
+    #         return files
+    file_code = f'File {files[0]}:\n {get_file(files[0])}\n\nFile {files[1]}:\n {get_file(files[1])}'
     prompt = f'Use the below code from 2 files to answer the question {question}\n\n{file_code}'
     
     response = co.generate(
