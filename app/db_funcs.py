@@ -53,7 +53,7 @@ def add_file_summary(collection_name, filename, summary):
     dbname = get_database()
     collection = dbname[collection_name]
     query = {"filename": filename}
-    update_result = collection.update_many(query, {"$set": {"summary": summary}})
+    collection.update_many(query, {"$set": {"summary": summary}})
 
 
 def add_folder_sumary(collection_name, foldername, summary):
