@@ -9,7 +9,9 @@ export default function NavBar() {
             </Link>
             <ul>
                 <CustomLink className='navbar_chat' to="/dragdrop">Upload</CustomLink>
-                <CustomLink className='navbar_prompt' to="/visual">Visualizer</CustomLink>
+                <CustomLink className='navbar_prompt' to="/visual">Chat Bot</CustomLink>
+                <CustomLink className='navbar_visualize' onClick={redirectToWebsite}>Visualize</CustomLink>
+                <a href="C:\\Users\\12254\\Documents\\GitHub\\HackTheNorth\\app\\func_graph.html">Redirect to Html page</a>
             </ul>
         </nav>
     );
@@ -27,3 +29,8 @@ function CustomLink({ to, children, ...props }) {
         </li>
     );
 }
+
+const redirectToWebsite = () =>{
+    console.log("1")
+    window.location.href= '..\\..\\app\\func_graph.html'
+};

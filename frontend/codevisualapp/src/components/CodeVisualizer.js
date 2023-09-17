@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './CodeVisualizer.css';
 
-
 function CodeVisualizer() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
@@ -21,11 +20,15 @@ function CodeVisualizer() {
     // Implement chatbot response logic here if needed
   };
 
+  const handleButtonClick = () => {
+    // Implement the logic for the button click here
+    // This function will be called when the button is clicked
+  };
+
   return (
     <div className="chat-visual-container">
       {/* Visual Screen */}
       <div className="visual-screen">
-        
         {/* For example, you can add an image or any visual elements */}
       </div>
 

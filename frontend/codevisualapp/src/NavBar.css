@@ -102,3 +102,10 @@ right: 25px;
 font-family: 'Rubik', sans-serif;
 /* font-size: 15px; */
 }
+
+.navbar_visualize{
+  position: relative;
+  right: 25px;
+  font-family: 'Rubik', sans-serif;
+  /* font-size: 15px; */
+  }
