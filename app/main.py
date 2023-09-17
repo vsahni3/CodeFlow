@@ -52,7 +52,6 @@ def upload():
     file.save(destination)
     # Extract 7z file
     Archive(destination).extractall(target)
-
     # Upload to mongo
     upload_file_mongo(target, filename.split(".")[0])
     print(get_file("test-post", "folder1/sample1.txt"))

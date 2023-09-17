@@ -6,31 +6,30 @@ import autofaiss
 from db_funcs import *
 
 
-
 api_key = os.environ["OPENAI_API_KEY"]
 co = cohere.Client(api_key)
 
 
-
 def summarize_code(file_code: str):
-    prompt = f'''
+    prompt = f"""
     Summarize the following code briefly.
     {file_code}
-    '''
+    """
     # past_info = load_messages(email)
     # past_prompt = ''
     # for data in past_info:
     #     past_prompt += data[0] + '\n' + data[1] + '\n--'
     # training_prompt += '--' + past_prompt
     response = co.generate(
-        model='command-xlarge-nightly',
+        model="command-xlarge-nightly",
         prompt=prompt,
         max_tokens=100,
         temperature=0.8,
         stop_sequences=["--"],
-        return_likelihoods='NONE',
-        truncate='START')
-    return response.generations[0].text.strip('-').strip('\n').strip(' ')
+        return_likelihoods="NONE",
+        truncate="START",
+    )
+    return response.generations[0].text.strip("-").strip("\n").strip(" ")
 
 
 def find_files(summaries, question):
@@ -45,27 +44,33 @@ def find_files(summaries, question):
     return [summaries[combined_values[i]] for i in idx[0][1:]]
 
 
-
 def reply(files, question):
-    sample_file_qs = ['what file', 'which file', 'file path', 'what folder', 'which folder']
+    sample_file_qs = [
+        "what file",
+        "which file",
+        "file path",
+        "what folder",
+        "which folder",
+    ]
     for file_q in sample_file_qs:
         if file_q in question.lower():
             return files
-    file_code = f'File1:\n {get_file(files[0])}\n\nFile2:\n {get_file(files[1])}'
-    prompt = f'Use the below code from 2 files to answer the question {question}\n\n{file_code}'
-    
+    file_code = f"File1:\n {get_file(files[0])}\n\nFile2:\n {get_file(files[1])}"
+    prompt = f"Use the below code from 2 files to answer the question {question}\n\n{file_code}"
+
     response = co.generate(
-        model='command-xlarge-nightly',
+        model="command-xlarge-nightly",
         prompt=prompt,
         max_tokens=100,
         temperature=0.8,
         stop_sequences=["--"],
-        return_likelihoods='NONE',
-        truncate='START')
-    return response.generations[0].text.strip('-').strip('\n').strip(' ')
+        return_likelihoods="NONE",
+        truncate="START",
+    )
+    return response.generations[0].text.strip("-").strip("\n").strip(" ")
 
 
-main1_code = '''
+main1_code = """
 
 import numpy as np
 import pandas as pd
@@ -88,8 +93,8 @@ median_mass = correct_lat_long_df['mass'].median()
 correct_lat_long_df.loc[row_indices, 'mass'] = median_mass
 
 correct_lat_long_df.loc[:, 'year'] = correct_lat_long_df.loc[:, 'year'].astype('int')
-'''
-main2_code = '''
+"""
+main2_code = """
 import seaborn as sns
 from data_cleaning import *
 import matplotlib.pyplot as plt
@@ -121,11 +126,10 @@ def top_10_met_type_histograms():
         plt.show()
 
 top_10_met_type_histograms()
-'''
+"""
 # code = {
 #     summarize_code(main1_code): 'src/folder1/main1.py',
 #     summarize_code(main2_code): 'src/folder2/main2.py'
 # }
 
-#print(summarize_code(main2_code))
-
+# print(summarize_code(main2_code))
