@@ -6,7 +6,9 @@ from db_funcs import *
 from cohere_analysis import *
 import pandas as pd
 from dotenv import load_dotenv
+
 from flask import Flask, flash, redirect, request, session, url_for, send_from_directory
+
 from flask_sqlalchemy import SQLAlchemy
 from pymongo import MongoClient
 from pyunpack import Archive
@@ -33,6 +35,7 @@ def visualize():
             data["filename"]: (data["data"], data["summary"]) for data in all_data
         }
         build_graph(current_data)
+
 
     else:
         for row in all_data:
