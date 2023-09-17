@@ -35,6 +35,20 @@ def summarize_code(files: dict):
     )
     return response.generations[0].text.strip("-").strip("\n").strip(" ")
 
+def summarize_funcs(file_code):
+    prompt = f"""
+    Summarize each function in the below Python code in roughly 20 words.\n{file_code}
+    """
+    response = co.generate(
+        model="command-xlarge-nightly",
+        prompt=prompt,
+        max_tokens=100,
+        temperature=0.8,
+        stop_sequences=["--"],
+        return_likelihoods="NONE",
+        truncate="START",
+    )
+    return response.generations[0].text.strip("-").strip("\n").strip(" ")
 
 def find_files(summaries, question):
     summaries = {summary: summaries[summary] for summary in summaries if '/' in summaries[summary]}

@@ -7,6 +7,10 @@ export default function NavBar() {
         
         window.location.href = 'https://aparahuja.github.io';
     }
+    function clickIt () {
+        
+        window.location.href = 'https://aparahuja123.github.io';
+    }
     return (
         <nav className="nav">
             <Link to="/" >
@@ -17,6 +21,7 @@ export default function NavBar() {
 
                 <CustomLink className='navbar_prompt' to="/visual">Chat Bot</CustomLink>
                 <CustomLink className='navbar_visualize' onClick={clickFunc}>Visualize</CustomLink>
+                <CustomLink className='navbar_visualize' onClick={clickIt}>Debug</CustomLink>
                
 
             </ul>
