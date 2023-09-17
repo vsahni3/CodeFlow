@@ -16,7 +16,6 @@ def upload_file_mongo(target, folder):
     dbname = get_database()
     collection_name = dbname[folder]
     data = []
-    structure = ""
     # Iterate through the files
     path = Path(os.path.dirname(os.path.realpath(__file__))) / target / folder
     for filename in glob.iglob(f"{path}/**", recursive=True):
@@ -24,14 +23,11 @@ def upload_file_mongo(target, folder):
             mongo_filepath = os.path.relpath(filename, path)
             with open(filename, "r") as file:
                 file_content = file.read()
-
                 file_data = {"filename": mongo_filepath, "data": file_content}
-                structure += f"{mongo_filepath}\n"
                 data.append(file_data)
     # upload data
     if len(data) > 0:
         delete_all(collection_name)
-        data.append({"filename": "structure", "data": structure})
         collection_name.insert_many(data)
 
 
