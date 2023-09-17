@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './CodeVisualizer.css';
 
-
 function CodeVisualizer() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);

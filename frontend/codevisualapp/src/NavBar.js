@@ -1,7 +1,12 @@
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import './NavBar.css';
-
+import { useNavigate } from "react-router-dom";
 export default function NavBar() {
+
+    function clickFunc () {
+        
+        window.location.href = 'https://www.google.ca/';
+    }
     return (
         <nav className="nav">
             <Link to="/" >
@@ -10,6 +15,7 @@ export default function NavBar() {
             <ul>
                 <CustomLink className='navbar_chat' to="/dragdrop">Upload</CustomLink>
                 <CustomLink className='navbar_prompt' to="/visual">Visualizer</CustomLink>
+                <CustomLink className='navbar_prompt' onClick={clickFunc}>Visualizer</CustomLink>
             </ul>
         </nav>
     );
