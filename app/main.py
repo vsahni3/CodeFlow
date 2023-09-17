@@ -6,7 +6,7 @@ from db_funcs import *
 from cohere_analysis import *
 import pandas as pd
 from dotenv import load_dotenv
-from flask import Flask, flash, redirect, request, session, url_for
+from flask import Flask, flash, redirect, request, session, url_for, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from pymongo import MongoClient
 from pyunpack import Archive
@@ -15,10 +15,7 @@ from werkzeug.utils import secure_filename
 
 load_dotenv()
 UPLOAD_FOLDER = "./uploads"
-ALLOWED_EXTENSIONS = set(["7z", 'zip'])
-
-
-
+ALLOWED_EXTENSIONS = set(["7z", "zip"])
 
 
 app = Flask(__name__)
@@ -27,38 +24,37 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 @app.route("/visualize", methods=["POST"])
 def visualize():
-    file_type = request.get_json()['fileType']
-    file_name = request.get_json()['fileName']
-    all_data = get_all('src')
+    file_type = request.get_json()["fileType"]
+    file_name = request.get_json()["fileName"]
+    all_data = get_all("src")
 
-    if file_type == 'High Level':
-        current_data = {data['filename']: (data['data'], data['summary']) for data in all_data}
+    if file_type == "High Level":
+        current_data = {
+            data["filename"]: (data["data"], data["summary"]) for data in all_data
+        }
         build_graph(current_data)
 
     else:
         for row in all_data:
-            if row['filename'] == file_name:
-                data = {file_name: (row['data'], row['summary'])}
+            if row["filename"] == file_name:
+                data = {file_name: (row["data"], row["summary"])}
         build_graph(data)
-    return 'Success'
+    return "Success"
+
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    question = request.get_json()['question']
-    all_data = get_all('src')
+    question = request.get_json()["question"]
+    all_data = get_all("src")
 
-    summaries = {data['summary']: data['filename'] for data in all_data}
+    summaries = {data["summary"]: data["filename"] for data in all_data}
     chosen_files = find_files(summaries, question)
     response = reply(files, question)
-    return jsonify({
-        'response': response
-    })
-
+    return jsonify({"response": response})
 
 
 @app.route("/upload", methods=["POST"])
 def upload():
-
     # Upload 7z file
     target = UPLOAD_FOLDER
     if not os.path.isdir(target):
@@ -73,40 +69,44 @@ def upload():
     # Upload to mongo
     dict_repo = {}
     upload_file_mongo(target, filename.split(".")[0])
-    all_info = get_all('src')
-    
+    all_info = get_all("src")
+
     folders = {}
     for file in all_info:
-
-        file_name = file['filename']
-        splitted = file_name.split('/')
+        file_name = file["filename"]
+        splitted = file_name.split("/")
         folder = splitted[0]
         if folder not in folders:
-            folders[folder] = {file_name: file['data']}
+            folders[folder] = {file_name: file["data"]}
         else:
-            folders[folder][file_name] = file['data']
-        dict_repo[file_name] = summarize_code({file_name: file['data']})
+            folders[folder][file_name] = file["data"]
+        dict_repo[file_name] = summarize_code({file_name: file["data"]})
 
     for folder in folders:
-        
         dict_repo[folder] = summarize_code(folders[folder])
 
     for file in dict_repo:
-        if '/' in file:
-            add_file_summary('src', file, dict_repo[file])
+        if "/" in file:
+            add_file_summary("src", file, dict_repo[file])
         else:
-            add_folder_sumary('src', file, dict_repo[file])
+            add_folder_sumary("src", file, dict_repo[file])
     # for i in dict_repo:
     #     print(i, dict_repo[i], end='\n\n')
     return "Success"
 
 
+@app.route("/func_graph")
+def func_graph():
+    print("func_graph")
+    return send_from_directory(".", "func_graph.html")
 
 
-
+@app.route("/file_graph")
+def file_graph():
+    print("file_graph")
+    return send_from_directory(".", "file_graph.html")
 
 
 if __name__ == "__main__":
     dbname = get_database()
-    app.run(threaded=True, debug=True, host="0.0.0.0", port=3000)
-
+    app.run(threaded=True, debug=True, host="0.0.0.0", port=3001)

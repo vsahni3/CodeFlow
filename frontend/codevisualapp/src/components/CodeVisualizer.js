@@ -13,21 +13,25 @@ function CodeVisualizer() {
     e.preventDefault();
     if (input.trim() === '') return;
 
-    // Add the new message to the top of the messages array
+    // Add the user's message to the chat
     setMessages([{ text: input, sender: 'user' }, ...messages]);
     setInput('');
 
-    // Implement chatbot response logic here if needed
+    // Simulate a chatbot response (you can replace this with your actual chatbot logic)
+    simulateChatbotResponse(input);
+  };
+
+  const simulateChatbotResponse = (userInput) => {
+    // Here, you can implement your chatbot logic to generate a response based on the user's input.
+    // For simplicity, let's just echo back the user's input for demonstration purposes.
+    const botResponse = `You said: ${userInput}`;
+
+    // Add the chatbot's response to the chat
+    setMessages([{ text: botResponse, sender: 'bot' }, ...messages]);
   };
 
   return (
     <div className="chat-visual-container">
-      {/* Visual Screen */}
-      <div className="visual-screen">
-        
-        {/* For example, you can add an image or any visual elements */}
-      </div>
-
       {/* Chat Box */}
       <div className="chat-box">
         {/* Previous Messages */}
