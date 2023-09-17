@@ -14,7 +14,7 @@ co = cohere.Client(api_key)
 
 def summarize_code(files: dict):
     prompt = f"""
-    Summarize the following Python code in roughly 50 words.\n
+    Summarize the following Python code in roughly 30 words.\n
     """
     for file in files:
         prompt += f"File: {file}\n\nCode:\n{files[file]}"
@@ -37,29 +37,33 @@ def summarize_code(files: dict):
 
 
 def find_files(summaries, question):
+    summaries = {summary: summaries[summary] for summary in summaries if '/' in summaries[summary]}
     list_summary = list(summaries.keys())
-
+    print(summaries)
     combined_values = [question] + list_summary
     embeddings = np.array(co.embed(combined_values).embeddings)
 
     index, stats = autofaiss.build_index(embeddings)
     dist, idx = index.search(np.array([embeddings[0]]), k=3)
-
+    print(idx)
     return [summaries[combined_values[i]] for i in idx[0][1:]]
 
 
 def reply(files, question):
+  
     # sample_file_qs = ['what file', 'which file', 'file path', 'what folder', 'which folder']
     # for file_q in sample_file_qs:
     #     if file_q in question.lower():
-    #         return files
-    file_code = f"File {files[0]}:\n {get_file(files[0])}\n\nFile {files[1]}:\n {get_file(files[1])}"
-    prompt = f"Use the below code from 2 files to answer the question {question}\n\n{file_code}"
-
+    #         return files[0]
+    print(files)
+    
+    file_code = f"File {files[0]}:\n {get_file('src', files[0])['data']}\n\nFile {files[1]}:\n {get_file('src', files[1])['data']}"
+    prompt = f"Use the below code from 2 files to briefly answer the question {question}. Make your response 40 words or less\n\n{file_code}"
+ 
     response = co.generate(
         model="command-xlarge-nightly",
         prompt=prompt,
-        max_tokens=100,
+        max_tokens=150,
         temperature=0.8,
         stop_sequences=["--"],
         return_likelihoods="NONE",

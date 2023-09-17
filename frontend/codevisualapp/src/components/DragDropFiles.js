@@ -16,9 +16,9 @@ const DragDropFiles = () => {
   
   // send files to the server
   const handleUpload = () => {
-    const formData = new FormData();
-    formData.append("Files", files);
-    console.log(formData.getAll())
+  
+    window.location.href = 'https://aparahuja.github.io/'
+    console.log(1)
     // fetch(
     //   "link", {
     //     method: "POST",

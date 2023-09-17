@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './CodeVisualizer.css';
+import axios from 'axios';
 
 function CodeVisualizer() {
   const [input, setInput] = useState('');
@@ -18,16 +19,25 @@ function CodeVisualizer() {
     setInput('');
 
     // Simulate a chatbot response (you can replace this with your actual chatbot logic)
-    simulateChatbotResponse('h1');
+    simulateChatbotResponse(input);
   };
 
-  const simulateChatbotResponse = (userInput) => {
+  const simulateChatbotResponse = async (userInput) => {
     // Here, you can implement your chatbot logic to generate a response based on the user's input.
     // For simplicity, let's just echo back the user's input for demonstration purposes.
-    const botResponse = `You said: ${userInput}`;
+    const body = {"question": userInput }; // convert to JSON since body needs to be in JSON format
+    const responses = [];
+    const response = await axios.post('http://127.0.0.1:3001/chat', {
+      question: userInput,
+    })
+  
+    // console.log("hi")
+    console.log(response.data.response)
+    let resp = "";
+    resp = response.data.response;
 
     // Add the chatbot's response to the chat
-    setMessages((prevMessages) => [{ text: botResponse, sender: 'bot' }, ...prevMessages]);
+    setMessages((prevMessages) => [{ text: resp, sender: 'bot' }, ...prevMessages]);
   };
 
   return (

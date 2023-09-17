@@ -39,10 +39,12 @@ def get_all(collection_name):  # collection_name is the "folder"
 
 
 def get_file(collection_name, filename):  # collection_name is the "folder"
-    dbname = get_database()
-    collection = dbname[collection_name]
-    file_details = collection.find({"filename": filename})
-    return list(file_details["data"])
+    
+    data = get_all('src')
+    for row in data:
+        if filename == row['filename']:
+            return row
+
 
 
 def delete_all(collection_name):
