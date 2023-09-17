@@ -1,9 +1,9 @@
 import ast
-import os
 
-def build_function_call_graph(file_path):
-    with open(file_path, 'r') as f:
-        tree = ast.parse(f.read(), filename=file_path)
+def build_function_call_graph(args):
+    (code, summary) = args
+    tree = ast.parse(code)
+
     call_graph = {}
     def traverse(node, current_function):
         if isinstance(node, ast.FunctionDef):
@@ -19,22 +19,19 @@ def build_function_call_graph(file_path):
     traverse(tree, None)
     return call_graph
 
-def build_funcs_dependency_nodes_and_edges(root_dir):
+def build_funcs_dependency_nodes_and_edges(file_to_code_summary_map):
     nodes = set()
     edges = []
 
-    for root, dirs, files in os.walk(root_dir):
-        for file in files:
-            if file.endswith(".py"):
-                file_path = os.path.join(root, file)
-                call_graph = build_function_call_graph(file_path)
-                for key in call_graph.keys():
-                    nodes.add(key)
-        for file in files:
-            if file.endswith(".py"):
-                file_path = os.path.join(root, file)
-                for key in call_graph.keys():
-                    for value in call_graph[key]:
-                        if value in nodes:
-                            edges.append((key, value))
+    for file in file_to_code_summary_map:
+        if file.endswith(".py"):
+            call_graph = build_function_call_graph(file_to_code_summary_map[file])
+            for key in call_graph.keys():
+                nodes.add((key, key))
+    for file in file_to_code_summary_map:
+        if file.endswith(".py"):
+            for key in call_graph.keys():
+                for value in call_graph[key]:
+                    if (value, value) in nodes:
+                        edges.append((key, value))
     return list(nodes), edges
