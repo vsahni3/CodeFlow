@@ -5,11 +5,10 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from pyunpack import Archive
 
+
 def get_database():
     client = MongoClient(os.environ.get("CONNECTION_STRING"))
     return client["uploads"]
-
-
 
 
 def upload_file_mongo(target, folder):
@@ -25,14 +24,13 @@ def upload_file_mongo(target, folder):
             mongo_filepath = os.path.relpath(filename, path)
             with open(filename, "r") as file:
                 file_content = file.read()
-         
+
                 file_data = {"filename": mongo_filepath, "data": file_content}
                 structure += f"{mongo_filepath}\n"
                 data.append(file_data)
     # upload data
     if len(data) > 0:
         delete_all(collection_name)
-        
         data.append({"filename": "structure", "data": structure})
         collection_name.insert_many(data)
 
@@ -48,7 +46,8 @@ def get_file(collection_name, filename):  # collection_name is the "folder"
     dbname = get_database()
     collection = dbname[collection_name]
     file_details = collection.find({"filename": filename})
-    return list(file_details['data'])
+    return list(file_details["data"])
+
 
 def delete_all(collection_name):
     collection_name.delete_many({})
@@ -58,4 +57,6 @@ def add_file_summary(collection_name, filename, summary):
     dbname = get_database()
     collection = dbname[collection_name]
     query = {"filename": filename}
+
     update_result = collection.update_many(query, {"$set": {"summary": summary}})
+
