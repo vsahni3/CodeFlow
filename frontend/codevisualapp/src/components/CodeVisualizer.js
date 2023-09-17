@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './CodeVisualizer.css';
 
+
 function CodeVisualizer() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
@@ -24,7 +25,7 @@ function CodeVisualizer() {
     <div className="chat-visual-container">
       {/* Visual Screen */}
       <div className="visual-screen">
-        {/* Add your visual content here */}
+        
         {/* For example, you can add an image or any visual elements */}
       </div>
 

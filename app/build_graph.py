@@ -20,6 +20,9 @@ def build_dependency_graph(nodes, edges):
     return net
 
 def build_graph(file_to_code_summary_map):
+    # for key, value in file_to_code_summary_map.items():
+    #     print(key)
+
     nodes, edges = build_files_dependency_nodes_and_edges(file_to_code_summary_map)
     dependency_graph = build_dependency_graph(nodes, edges)
     dependency_graph.show("file_graph.html", notebook=False)
@@ -35,4 +38,3 @@ file_to_code_summary_map = {
     "module1/module1.py": ("# module1.py\nfrom module2.module2 import foo\ndef bar():\n\tfoo()\ndef baz():\n\tpass", "SUMMARY 2"),
     "module2/module2.py": ("# module2.py\ndef foo():\n\tpass", "SUMMARY 3"),
 }
-build_graph(file_to_code_summary_map)

@@ -1,6 +1,6 @@
 import glob
 import os
-from build_graph import build_dependency_graph
+from build_graph import build_graph
 from pathlib import Path
 from db_funcs import *
 from cohere_analysis import *
@@ -30,15 +30,17 @@ def visualize():
     file_type = request.get_json()['fileType']
     file_name = request.get_json()['fileName']
     all_data = get_all('src')
+
     if file_type == 'High Level':
         current_data = {data['filename']: (data['data'], data['summary']) for data in all_data}
-        build_dependency_graph()
+        build_graph(current_data)
+
     else:
         for row in all_data:
             if row['filename'] == file_name:
                 data = {file_name: (row['data'], row['summary'])}
-        build_dependency_graph(data)
-
+        build_graph(data)
+    return 'Success'
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -75,6 +77,7 @@ def upload():
     
     folders = {}
     for file in all_info:
+
         file_name = file['filename']
         splitted = file_name.split('/')
         folder = splitted[0]
@@ -83,12 +86,18 @@ def upload():
         else:
             folders[folder][file_name] = file['data']
         dict_repo[file_name] = summarize_code({file_name: file['data']})
+
     for folder in folders:
+        
         dict_repo[folder] = summarize_code(folders[folder])
 
     for file in dict_repo:
-        add_file_summary('src', file, dict_repo[file])
-        
+        if '/' in file:
+            add_file_summary('src', file, dict_repo[file])
+        else:
+            add_folder_sumary('src', file, dict_repo[file])
+    # for i in dict_repo:
+    #     print(i, dict_repo[i], end='\n\n')
     return "Success"
 
 
